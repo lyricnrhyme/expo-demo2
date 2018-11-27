@@ -6,7 +6,8 @@ import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import CameraScreen from '../screens/CameraScreen';
+import MapScreen from '../screens/MapScreen';
+import ScrollScreen from '../screens/ScrollScreen';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -35,7 +36,10 @@ LinksStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+      name={
+        Platform.OS === 'ios'
+          ? 'ios-link'
+          : 'md-link'}
     />
   ),
 };
@@ -49,21 +53,41 @@ SettingsStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+      name={Platform.OS === 'ios'
+        ? 'ios-options'
+        : 'md-options'}
     />
   ),
 };
 
-const CameraStack = createStackNavigator({
-  Camera: CameraScreen,
+const MapStack = createStackNavigator({
+  Map: MapScreen,
 });
 
-CameraStack.navigationOptions = {
+MapStack.navigationOptions = {
+  tabBarLabel: 'Map',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios'
+        ? 'ios-options'
+        : 'md-options'}
+    />
+  ),
+};
+
+const ScrollStack = createStackNavigator({
+  Camera: ScrollScreen,
+});
+
+ScrollStack.navigationOptions = {
   tabBarLabel: 'Camera',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+      name={Platform.OS === 'ios'
+        ? 'ios-options'
+        : 'md-options'}
     />
   ),
 };
@@ -72,5 +96,6 @@ export default createBottomTabNavigator({
   HomeStack,
   LinksStack,
   SettingsStack,
-  CameraStack
+  MapStack,
+  ScrollScreen
 });

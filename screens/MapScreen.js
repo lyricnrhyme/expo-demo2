@@ -15,15 +15,33 @@ import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 
-export default class CameraScreen extends React.Component {
-  state = {
-    num: 0
+import GeoPoints from '../data/GeoPoints'
+
+export default class MapScreen extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isLoading: true,
+      markers: [],
+    };
   }
 
-  static navigationOptions = {
-    header: null
-  };
+  // simulate db request
+  fetchLocationData = (coordMap) => {
+    console.log('FETCHED: ', coordMap)
 
+    // set state to db data
+    this.setState({
+      isLoading: false,
+      markers: coordMap
+    })
+  }
+
+  componentDidMount = () => {
+    console.log('IMPORTED: ', GeoPoints)
+    this.fetchLocationData(GeoPoints)
+  }
 
   componentWillMount() { }
 
@@ -43,16 +61,62 @@ export default class CameraScreen extends React.Component {
 
   render() {
 
+    console.log('RENDER: ', this.state)
+
+    let coordArray = this.state.markers.map((marker) => {
+      const coords = {
+        latitude: marker.latitude,
+        longitude: marker.longitude
+      };
+      console.log('coords: ', coords)
+    })
+    // console.log('COORD ARRAY: ', coordArray)
+
+
+    // {this.state.isLoading ? null : this.state.markers.map((marker, index) => {
+    //   const coords = {
+    //       latitude: marker.latitude,
+    //       longitude: marker.longitude,
+    //   };
+
     return (
+      // <MapView
+      //   style={{ flex: 1 }}
+      //   initialRegion={{
+      //     latitude: 21.29679203358388,
+      //     longitude: -157.85667116574777,
+      //     latitudeDelta: 0.0922,
+      //     longitudeDelta: 0.0421,
+      //   }}
+      // />
       <MapView
         style={{ flex: 1 }}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+        region={{
+          latitude: 21.29679203358388,
+          longitude: -157.85667116574777,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-      />
+      >
+        {this.state.isLoading ? null : this.state.markers.map((marker, index) => {
+          const coords = {
+            latitude: marker.latitude,
+            longitude: marker.longitude,
+          };
+
+          const metadata = `Status: ${marker.statusValue}`;
+
+          return (
+            <MapView.Marker
+              key={index}
+              coordinate={coords}
+              title={marker.stationName}
+              description={metadata}
+            />
+          );
+        })}
+      </MapView>
+
     )
   }
 
