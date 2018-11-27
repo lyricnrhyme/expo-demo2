@@ -14,16 +14,6 @@ import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 
-// const styles = StyleSheet.create({
-//   bigblue: {
-//     color: 'blue',
-//     fontWeight: 'bold',
-//     fontSize: 30,
-//   },
-//   red: {
-//     color: 'red',
-//   },
-// });
 export default class HomeScreen extends React.Component {
   state = {
     num: 0
