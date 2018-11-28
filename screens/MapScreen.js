@@ -1,5 +1,5 @@
 import React from 'react';
-import Expo from 'expo';
+import * as Expo from 'expo';
 import { MapView } from 'expo';
 import { Constants, Location, Permissions } from 'expo';
 import {
@@ -24,80 +24,81 @@ export default class MapScreen extends React.Component {
     this.state = {
       isLoading: true,
       markers: [],
+      location: {
+        latitude: 21.29679203358388,
+        longitude: -157.85667116574777
+      }
     };
   }
 
   // simulate db request
   fetchLocationData = (coordMap) => {
-    console.log('FETCHED: ', coordMap)
+    // console.log('FETCHED: ', coordMap)
 
     // set state to db data
     this.setState({
       isLoading: false,
-      markers: coordMap
+      markers: coordMap,
     })
   }
 
-  componentDidMount = () => {
-    console.log('IMPORTED: ', GeoPoints)
+  componentDidMount = async () => {
+
+
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    console.log('MAP CURRENT: ', location)
+    this.setState({
+      location: location
+    });
+
+    // console.log('IMPORTED: ', GeoPoints)
     this.fetchLocationData(GeoPoints)
   }
 
-  componentWillMount() { }
+  // componentWillMount = () => {
 
-
-  // _handleClick = () => {
-  //   let { status } = Permissions.askAsync(Permissions.LOCATION);
-  //   if (status !== 'granted') {
-  //     this.setState({
-  //       errorMessage: 'Permission to access location was denied',
-  //     });
-  //   }
 
   //   let location = Location.getCurrentPositionAsync({});
-  //   console.log(location)
-  //   this.setState({ location });
-  // };
+  //   console.log('MAP CURRENT: ', location)
+  //   this.setState({
+  //     location: location
+  //   });
+  // }
 
   render() {
 
-    console.log('RENDER: ', this.state)
+    console.log('THIS.STATE.LOCATION: ', this.state.location)
 
-    let coordArray = this.state.markers.map((marker) => {
+    this.state.markers.map((marker) => {
       const coords = {
         latitude: marker.latitude,
         longitude: marker.longitude
       };
-      console.log('coords: ', coords)
     })
-    // console.log('COORD ARRAY: ', coordArray)
-
-
-    // {this.state.isLoading ? null : this.state.markers.map((marker, index) => {
-    //   const coords = {
-    //       latitude: marker.latitude,
-    //       longitude: marker.longitude,
-    //   };
 
     return (
-      // <MapView
-      //   style={{ flex: 1 }}
-      //   initialRegion={{
-      //     latitude: 21.29679203358388,
-      //     longitude: -157.85667116574777,
-      //     latitudeDelta: 0.0922,
-      //     longitudeDelta: 0.0421,
-      //   }}
-      // />
       <MapView
         style={{ flex: 1 }}
         region={{
           latitude: 21.29679203358388,
           longitude: -157.85667116574777,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
         }}
       >
+        <MapView.Marker
+          style={styles.currentLocal}
+          pinColor='green'
+          coordinate={this.state.location.coords}
+          title='Current Location'
+        />
         {this.state.isLoading ? null : this.state.markers.map((marker, index) => {
           const coords = {
             latitude: marker.latitude,
@@ -119,40 +120,6 @@ export default class MapScreen extends React.Component {
 
     )
   }
-
-  // _maybeRenderDevelopmentModeWarning() {
-  //   if (__DEV__) {
-  //     const learnMoreButton = (
-  //       <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-  //         Learn more
-  //       </Text>
-  //     );
-
-  //     return
-  //     (
-  //       <Text style={styles.developmentModeText}>
-  //         Development mode is enabled, your app will be slower but you can use useful development
-  //         tools. {learnMoreButton}
-  //       </Text>
-  //     );
-  //   } else {
-  //     return (
-  //       <Text style={styles.developmentModeText}>
-  //         You are not in development mode, your app will run at full speed.
-  //       </Text>
-  //     );
-  //   }
-  // }
-
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/guides/development-mode');
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
 }
 
 const styles = StyleSheet.create({

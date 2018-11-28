@@ -8,6 +8,7 @@ import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import MapScreen from '../screens/MapScreen';
 import ScrollScreen from '../screens/ScrollScreen';
+import Scene from '../screens/Scene.js';
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
@@ -92,10 +93,27 @@ ScrollStack.navigationOptions = {
   ),
 };
 
+const SceneStack = createStackNavigator({
+  Scene: Scene,
+});
+
+SceneStack.navigationOptions = {
+  tabBarLabel: 'Scene',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios'
+        ? 'ios-options'
+        : 'md-options'}
+    />
+  ),
+};
+
 export default createBottomTabNavigator({
   HomeStack,
   LinksStack,
   SettingsStack,
   MapStack,
-  ScrollScreen
+  ScrollScreen,
+  SceneStack
 });

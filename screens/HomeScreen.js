@@ -1,5 +1,5 @@
 import React from 'react';
-import Expo from 'expo';
+import * as Expo from 'expo';
 import { Constants, Location, Permissions } from 'expo';
 import {
   Image,
@@ -34,8 +34,7 @@ export default class HomeScreen extends React.Component {
     // }
   }
 
-
-  _handleClick = async () => {
+  componentDidMount = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
@@ -46,6 +45,20 @@ export default class HomeScreen extends React.Component {
     let location = await Location.getCurrentPositionAsync({});
     console.log(location)
     this.setState({ location });
+  }
+
+
+  _handleClick = async () => {
+    // let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    // if (status !== 'granted') {
+    //   this.setState({
+    //     errorMessage: 'Permission to access location was denied',
+    //   });
+    // }
+
+    // let location = await Location.getCurrentPositionAsync({});
+    // console.log(location)
+    // this.setState({ location });
   };
 
   render() {
@@ -92,14 +105,6 @@ export default class HomeScreen extends React.Component {
             </TouchableOpacity>
           </View>
         </ScrollView>
-
-        {/* <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</MonoText>
-          </View>
-        </View> */}
       </View>
     );
   }
